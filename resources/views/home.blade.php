@@ -14,7 +14,16 @@
                         </div>
                     @endif
 
-                    {{ __('You are logged in!') }}
+                    <form method="POST" action={{ url("store") }}>
+                        <div class="form-group" style="margin-bottom: 15px">
+                            {{ csrf_field() }}
+                            <label for="quoteTextarea">Quote</label>
+                            <textarea name="quote" class="form-control" id="quoteTextarea" rows="5" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

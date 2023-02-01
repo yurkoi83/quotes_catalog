@@ -1,0 +1,53 @@
+version: '3.2'
+
+services:
+    php-fpm:
+        container_name: php-fpm
+        build:
+            context: docker/php-fpm
+        volumes:
+            - ./:/var/www
+        environment:
+            PHP_IDE_CONFIG: "serverName=Docker"
+        depends_on:
+            - db_quotes
+        #    extra_hosts:
+        #      - "host.docker.internal:host-gateway"
+        networks:
+            - internal
+    nginx_quotes:
+        container_name: nginx_quotes
+        build:
+            context: docker/nginx
+        volumes:
+            - ./:/var/www
+            - ./storage/app/public/:/var/www/public/storage/
+        ports:
+            - 8068:80
+        depends_on:
+            - php-fpm
+        networks:
+            - internal
+    db_quotes:
+        image: mysql
+        container_name: db_quotes
+        restart: always
+        command: --default-authentication-plugin=mysql_native_password
+        ports:
+            - 3356:3306 #for local phpstorm access
+        networks:
+            - internal
+        environment:
+            - MYSQL_DATABASE=${DB_DATABASE}
+            - MYSQL_USER=${DB_USERNAME}
+            - MYSQL_PASSWORD=${DB_PASSWORD}
+            - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+        volumes:
+            - ./docker/mysql/datadir:/var/lib/mysql
+networks:
+    internal:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: 192.168.211.0/28
