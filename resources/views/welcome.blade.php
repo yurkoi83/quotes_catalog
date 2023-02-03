@@ -97,6 +97,7 @@
                         if (!response.ok) {
                             throw new Error(response.statusText)
                         }
+                        Swal.fire('Message will be sent, please wait!', '', 'success')
                         location.reload();
                     })
                     .catch(error => {

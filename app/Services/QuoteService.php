@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\SendQuoteJob;
 use App\Models\Quote;
 use App\Models\User;
 
@@ -33,17 +34,13 @@ class QuoteService
         return $result;
     }
 
+
     /**
      * @param Quote $quote
-     * @param string $messenger
-     * @return Quote
+     * @return void
      */
-    public static function send(Quote $quote): Quote
+    public static function send(Quote $quote)
     {
-        $result = Quote::find($quote->id);
-        $result->send_count = $result->send_count+1;
-        $result->save();
-
-        return $result;
+        SendQuoteJob::dispatch($quote)->delay(rand(5, 20));
     }
 }

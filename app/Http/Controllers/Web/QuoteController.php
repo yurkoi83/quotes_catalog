@@ -21,7 +21,6 @@ class QuoteController extends Controller
     {
         if(empty($request->messages())) {
             QuoteService::send($quote);
-            sleep(rand(5, 20));
         }
 
         return response()->json(array('success' => true, 'result' => 'ok'));
