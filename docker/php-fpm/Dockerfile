@@ -1,7 +1,7 @@
 FROM php:7.4-fpm
 
 RUN apt-get update \
-    && apt-get install -y wget git unzip libpq-dev libicu-dev libpng-dev libzip-dev libjpeg-dev libfreetype6-dev mc htop procps inetutils-ping net-tools telnet\
+    && apt-get install -y wget git unzip libpq-dev libicu-dev libpng-dev libzip-dev libjpeg-dev libfreetype6-dev mc htop procps inetutils-ping net-tools telnet npm\
     && pecl install xdebug-3.0.0 \
     && docker-php-ext-enable xdebug \
     && docker-php-ext-install -j$(nproc) bcmath \
@@ -16,10 +16,14 @@ RUN apt-get update \
 
 ADD ./php.ini /usr/local/etc/php/php.ini
 ADD ./xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-ADD ./lara_cron /etc/cron.d/lara_cron
 
-RUN ["rm","/bin/sh"]
-RUN ["ln", "-s", "/bin/bash", "/bin/sh"]
+RUN npm install npm@latest -g && \
+    npm install n -g && \
+    n latest \
+
+
+#RUN ["rm","/bin/sh"]
+#RUN ["ln", "-s", "/bin/bash", "/bin/sh"]
 
 RUN wget https://getcomposer.org/installer -O - -q \
     | php -- --install-dir=/bin --filename=composer --quiet \

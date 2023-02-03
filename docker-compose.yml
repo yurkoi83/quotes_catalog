@@ -9,10 +9,6 @@ services:
             - ./:/var/www
         environment:
             PHP_IDE_CONFIG: "serverName=Docker"
-        depends_on:
-            - db_quotes
-        #    extra_hosts:
-        #      - "host.docker.internal:host-gateway"
         networks:
             - internal
     nginx_quotes:
@@ -25,7 +21,7 @@ services:
         ports:
             - 8068:80
         depends_on:
-            - php-fpm
+            - db_quotes
         networks:
             - internal
     db_quotes:
@@ -42,6 +38,8 @@ services:
             - MYSQL_USER=${DB_USERNAME}
             - MYSQL_PASSWORD=${DB_PASSWORD}
             - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+        depends_on:
+            - php-fpm
         volumes:
             - ./docker/mysql/datadir:/var/lib/mysql
 networks:

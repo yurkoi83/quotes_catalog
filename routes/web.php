@@ -14,16 +14,24 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $quotes = \App\Models\Quote::all();
+    return view('welcome', ['quotes' => $quotes]);
 });
 
 Auth::routes();
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::group([
+    'middleware' => ['web'],
+], function ($router) {
+    Route::get('/send/{quote}', [\App\Http\Controllers\Web\QuoteController::class, 'send'])->name('send');
+});
+
+Route::group([
     'middleware' => ['auth'],
 ], function ($router) {
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-    Route::post('/store', [App\Http\Controllers\QuoteController::class, 'store'])->name('create');
-    Route::post('/create', [App\Http\Controllers\QuoteController::class, 'update'])->name('update');
+    Route::get('/home', [\App\Http\Controllers\Web\HomeController::class, 'index'])->name('home');
+    Route::post('/create', [\App\Http\Controllers\Web\HomeController::class, 'create'])->name('create');
+    Route::get('/edit/{quote}', [\App\Http\Controllers\Web\HomeController::class, 'edit'])->name('edit');
+    Route::put('/update/{quote}', [\App\Http\Controllers\Web\HomeController::class, 'update'])->name('update');
 });

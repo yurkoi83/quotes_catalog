@@ -15,10 +15,11 @@ class CreateQuotesTable extends Migration
     {
         Schema::create('quotes', function (Blueprint $table) {
             $table->id();
-            $table->text('quote');
+            $table->string('text', 300);
             $table->integer('send_count')->unsigned()->nullable();
             $table->integer('user_id')->unsigned()->nullable();
             $table->timestamps();
+            $table->unique(["text"]);
             $table->index(["user_id"]);
         });
     }

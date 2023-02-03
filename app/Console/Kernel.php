@@ -2,11 +2,25 @@
 
 namespace App\Console;
 
+use App\Console\Commands\CreateQuoteCommand;
+use App\Console\Commands\SendQuoteCommand;
+use App\Console\Commands\UpdateQuoteCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
+    /**
+     * The Artisan commands provided by your application.
+     *
+     * @var array
+     */
+    protected $commands = [
+        CreateQuoteCommand::class,
+        UpdateQuoteCommand::class,
+        SendQuoteCommand::class,
+    ];
+
     /**
      * Define the application's command schedule.
      *
