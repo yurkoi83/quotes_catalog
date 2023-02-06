@@ -1,4 +1,7 @@
-FROM php:7.4-fpm
+FROM php:8.0-fpm
+
+RUN ["rm","/bin/sh"]
+RUN ["ln", "-s", "/bin/bash", "/bin/sh"]
 
 RUN apt-get update \
     && apt-get install -y wget git unzip libpq-dev libicu-dev libpng-dev libzip-dev libjpeg-dev libfreetype6-dev mc htop procps inetutils-ping net-tools telnet npm\
@@ -17,16 +20,12 @@ RUN apt-get update \
 ADD ./php.ini /usr/local/etc/php/php.ini
 ADD ./xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
+RUN wget https://getcomposer.org/installer -O - -q \
+    | php -- --install-dir=/bin --filename=composer --quiet \
+
 RUN npm install npm@latest -g && \
     npm install n -g && \
     n latest \
-
-
-#RUN ["rm","/bin/sh"]
-#RUN ["ln", "-s", "/bin/bash", "/bin/sh"]
-
-RUN wget https://getcomposer.org/installer -O - -q \
-    | php -- --install-dir=/bin --filename=composer --quiet \
 
 USER 1000
 
